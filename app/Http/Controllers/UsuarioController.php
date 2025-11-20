@@ -20,9 +20,20 @@ use App\Models\Material;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Services\DashboardManager;
+use App\Services\Buscador; // { changed code }
 
 class UsuarioController extends Controller
 {
+    // { changed code }
+    public function __construct(protected DashboardManager $dashboardManager, protected Buscador $buscador)
+    {
+        // Si necesita middleware lo puede agregar aquí, p.e.:
+        // $this->middleware('auth')->except(['login']);
+        $this->buscador = $buscador;
+    }
+    
+
     /**
      * Muestra el listado paginado de usuarios con sus lugares
      */
@@ -30,7 +41,11 @@ class UsuarioController extends Controller
     {
         $usuarios = Usuarios::with('lugar')->paginate(10);
         $lugares = Lugar::all();
-        return view('index', compact('usuarios', 'lugares'));
+
+        // Obtener datos de dashboard (si hay usuario autenticado)
+        $dashboard = Auth::check() ? $this->dashboardManager->getDashboardFor(Auth::user()) : null; // { changed code }
+
+        return view('index', compact('usuarios', 'lugares', 'dashboard')); // { changed code }
     }
 
     /**
@@ -52,7 +67,10 @@ class UsuarioController extends Controller
             });
         })->paginate(10);
 
-        return view('index_materiales_simple', compact('materiales', 'lugares'));
+        // Incluir datos de dashboard para la vista de materiales
+        $dashboard = Auth::check() ? $this->dashboardManager->getDashboardFor(Auth::user()) : null; // { changed code }
+
+        return view('index_materiales_simple', compact('materiales', 'lugares', 'dashboard')); // { changed code }
     }
 
     /**
@@ -270,5 +288,43 @@ class UsuarioController extends Controller
     public function modalDeleteUser($id)
     {
         return $this->destroy($id);
+    }
+
+    // Nuevo método: búsqueda flexible de usuarios
+    public function searchUsuarios(Request $request)
+    {
+        // Obtener parámetros de búsqueda
+        $strategy = $request->input('strategy', 'nombre'); // Por defecto 'nombre'
+        $term = $request->input('term', '');
+        $from = $request->input('from');
+        $to = $request->input('to');
+        $field = $request->input('field', 'nombre'); // Campo específico para búsqueda
+
+        // Construir query base - CORRECCIÓN: usar Usuario (modelo) en lugar de UsuarioController
+        $query = Usuarios::query()->with('lugar');
+
+        // Preparar parámetros según la estrategia
+        $params = [];
+        
+        switch ($strategy) {
+            case 'nombre':
+                $params = [
+                    'term' => $term,
+                    'field' => $field // 'nombre', 'correo', etc.
+                ];
+                break;
+        }
+
+        // Aplicar estrategia de búsqueda
+        $query = $this->buscador->search($query, $strategy, $params);
+
+        // Ejecutar query - SIN paginar para que JavaScript maneje la paginación
+        $usuarios = $query;
+
+        // Obtener todos los lugares
+        $lugares = \App\Models\Lugar::all();
+
+        // Retornar vista con resultados
+        return view('index', compact('usuarios', 'lugares'));
     }
 }

@@ -1,15 +1,3 @@
-{{-- 
-    Vista principal de materiales para usuarios normales
-    
-    Esta vista permite a los usuarios ver materiales disponibles, buscar materiales
-    y vehículos con autocompletado AJAX, crear reportes de uso de materiales
-    y gestionar su perfil de usuario. Incluye funcionalidades avanzadas como
-    secuencias secretas para acceso de administradores y notificaciones dinámicas.
-    
-    @author Gustavo Angel Cid Flores
-    @version 2.0.0
---}}
-
 <!DOCTYPE html>
 <html lang="es">
 <head>

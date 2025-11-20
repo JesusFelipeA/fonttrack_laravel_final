@@ -435,7 +435,7 @@
         /* Campo de búsqueda */
         .search-input {
             border: none;
-            border-radius: 50px;
+            border-radius: 0;
             padding: 18px 25px;
             font-size: 16px;
             font-weight: 500;
@@ -445,6 +445,7 @@
             backdrop-filter: blur(10px);
             position: relative;
             z-index: 1;
+            border-left: 1px solid rgba(227, 139, 91, 0.3);
         }
 
         .search-input:focus {
@@ -457,6 +458,26 @@
         .search-input::placeholder {
             color: rgba(99, 77, 59, 0.6);
             font-weight: 400;
+        }
+
+        /* Select de campo de búsqueda */
+        #searchField {
+            border: none;
+            border-radius: 50px 0 0 50px;
+            border-right: none;
+            background: rgba(255, 255, 255, 0.95);
+            font-weight: 600;
+            padding: 18px 20px;
+            box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        #searchField:focus {
+            outline: none;
+            box-shadow: 0 0 30px rgba(227, 139, 91, 0.4), inset 0 4px 8px rgba(0, 0, 0, 0.1);
+            background: white;
         }
 
         /* Estilos de botones */
@@ -566,7 +587,7 @@
             border: 2px solid rgba(255, 255, 255, 0.3);
             background: rgba(255, 255, 255, 0.1);
             color: white;
-            border-radius: 50px;
+            border-radius: 0 50px 50px 0;
             padding: 18px 25px;
             font-weight: 600;
             transition: all 0.3s ease;
@@ -865,6 +886,28 @@
                 font-size: 14px;
             }
 
+            #searchField {
+                max-width: 100% !important;
+                border-radius: 50px;
+                margin-bottom: 10px;
+            }
+
+            .input-group {
+                flex-direction: column;
+            }
+
+            .search-input {
+                border-radius: 50px !important;
+                border-left: none !important;
+                margin-top: 10px;
+            }
+
+            .btn-outline-light {
+                border-radius: 50px !important;
+                margin-top: 10px;
+                width: 100%;
+            }
+
             .table th,
             .table td {
                 padding: 12px 8px;
@@ -964,8 +1007,15 @@
             <div class="row">
                 <div class="col-md-8 offset-md-2">
                     <div class="input-group">
+                        <select id="searchField" class="form-select" style="max-width: 180px;">
+                            <option value="all">Todos los campos</option>
+                            <option value="nombre">Nombre</option>
+                            <option value="correo">Correo</option>
+                            <option value="tipo">Tipo</option>
+                            <option value="lugar">Lugar</option>
+                        </select>
                         <input type="text" id="searchUsers" class="form-control search-input"
-                            placeholder="Buscar usuarios por nombre, correo o tipo...">
+                            placeholder="Buscar usuarios...">
                         <button class="btn btn-outline-light" type="button">
                             <i class="bi bi-search"></i>
                         </button>
@@ -1151,7 +1201,7 @@
          * 
          * Script principal que maneja:
          * - CRUD completo de usuarios
-         * - Sistema de búsqueda en tiempo real
+         * - Sistema de búsqueda en tiempo real con filtros
          * - Paginación dinámica
          * - Validación de formularios
          * - Gestión de archivos de imagen
@@ -1202,26 +1252,45 @@
 
             /**
              * Sistema de búsqueda en tiempo real
-             * Filtra usuarios por nombre, correo, tipo o lugar
+             * Filtra usuarios por el campo seleccionado o por todos los campos
              */
-            $('#searchUsers').on('keyup', function () {
-                const searchTerm = $(this).val().toLowerCase();
+            function performSearch() {
+                const searchTerm = $('#searchUsers').val().toLowerCase();
+                const searchField = $('#searchField').val();
 
                 if (searchTerm === '') {
                     filteredUsers = [...allUsers];
                 } else {
                     filteredUsers = allUsers.filter(user => {
-                        return user.nombre.toLowerCase().includes(searchTerm) ||
-                            user.correo.toLowerCase().includes(searchTerm) ||
-                            user.tipo.toLowerCase().includes(searchTerm) ||
-                            user.lugar.toLowerCase().includes(searchTerm);
+                        switch(searchField) {
+                            case 'nombre':
+                                return user.nombre.toLowerCase().includes(searchTerm);
+                            case 'correo':
+                                return user.correo.toLowerCase().includes(searchTerm);
+                            case 'tipo':
+                                return user.tipo.toLowerCase().includes(searchTerm);
+                            case 'lugar':
+                                return user.lugar.toLowerCase().includes(searchTerm);
+                            case 'all':
+                            default:
+                                return user.nombre.toLowerCase().includes(searchTerm) ||
+                                    user.correo.toLowerCase().includes(searchTerm) ||
+                                    user.tipo.toLowerCase().includes(searchTerm) ||
+                                    user.lugar.toLowerCase().includes(searchTerm);
+                        }
                     });
                 }
 
                 currentPage = 1;
                 updatePagination();
                 showPage(1);
-            });
+            }
+
+            // Ejecutar búsqueda al escribir
+            $('#searchUsers').on('keyup', performSearch);
+
+            // Ejecutar búsqueda al cambiar el campo de búsqueda
+            $('#searchField').on('change', performSearch);
 
             /**
              * Muestra una página específica de usuarios

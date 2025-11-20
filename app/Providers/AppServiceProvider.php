@@ -3,6 +3,11 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Services\Buscador;
+use App\Services\Search\NombreSearchStrategy;
+use App\Services\Search\CodigoSearchStrategy;
+use App\Services\Search\FechaSearchStrategy;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -13,6 +18,17 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->bind('public.path', function() {
             return base_path().'/public_html';
+        });
+
+        $this->app->singleton(\App\Services\DashboardManager::class, function ($app) {
+            return new \App\Services\DashboardManager();
+        });
+        $this->app->singleton(Buscador::class, function ($app) {
+            return new Buscador([
+                'nombre' => new NombreSearchStrategy(),
+                'codigo' => new CodigoSearchStrategy(),
+                'fecha' => new FechaSearchStrategy(),
+            ]);
         });
     }
 

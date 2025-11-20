@@ -41,9 +41,12 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Mail\ReporteFalla;
+use App\Services\Buscador; // { changed code }
 
 class MaterialController extends Controller
 {
+    public function __construct(protected Buscador $buscador) {}
+
     /**
      * ========================================================================
      * VISTA PRINCIPAL CON FILTRADO POR UBICACIÓN
@@ -968,5 +971,29 @@ class MaterialController extends Controller
         $writer->save($tempFile);
 
         return response()->download($tempFile, $fileName)->deleteFileAfterSend(true);
+    }
+
+    /**
+     * ========================================================================
+     * BÚSQUEDA DE MATERIALES
+     * ========================================================================
+     * 
+     * Permite buscar materiales utilizando diferentes estrategias
+     * como nombre, código o fecha, con paginación de resultados.
+     * 
+     * @param Request $request - Parámetros de búsqueda
+     * @return \Illuminate\View\View - Vista con materiales buscados
+     */
+    public function search(Request $request)
+    {
+        $strategy = $request->input('strategy', 'nombre'); // nombre|codigo|fecha
+        $params = $request->only(['term','field','from','to','date_column']);
+
+        $query = Material::query();
+        $query = $this->buscador->search($query, $strategy, $params);
+
+        $materials = $query->paginate(12);
+
+        return view('materials.index', compact('materials'));
     }
 }

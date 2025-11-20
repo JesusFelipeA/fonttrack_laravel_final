@@ -1,25 +1,3 @@
-<!-- 
-    ============================================================================
-    VISTA PRINCIPAL DE MATERIALES - FONTTRACK SYSTEM
-    ============================================================================
-    
-    Esta vista constituye el núcleo del sistema de gestión de materiales para
-    usuarios autenticados. Proporciona funcionalidades completas para:
-    
-    • Visualización y búsqueda de materiales por ubicación
-    • Gestión de inventario (aumentar/disminuir existencias)
-    • Generación de reportes de fallas y uso de materiales
-    • Importación masiva de datos desde archivos Excel (Kardex)
-    • Sistema de notificaciones pendientes para administradores
-    • Integración con vehículos y conductores por ubicación
-    • Control de acceso basado en roles y ubicaciones
-    
-    @author Gustavo Angel Cid Flores
-    @version 2.0.0
-    @package FontTrack\Views\Materials
-    ============================================================================
--->
-
 <!DOCTYPE html>
 <html lang="es">
 
@@ -350,10 +328,6 @@
             color: white;
             transform: translateX(5px);
         }
-
-        {{-- ====================================================================
-             CONTENEDOR PRINCIPAL CON EFECTOS GLASSMORPHISM
-             ==================================================================== --}}
         .container {
             background: rgba(255, 255, 255, 0.95);
             margin: 30px auto;
@@ -368,7 +342,7 @@
             overflow: hidden;
         }
 
-        {{-- Efecto de fondo animado --}}
+
         .container::before {
             content: '';
             position: absolute;
@@ -381,7 +355,6 @@
             pointer-events: none;
         }
 
-        {{-- Títulos principales con gradiente --}}
         h2 {
             font-size: 2.5em;
             font-weight: 700;
@@ -407,9 +380,6 @@
             border-radius: 2px;
         }
 
-        {{-- ====================================================================
-             SISTEMA DE NOTIFICACIONES MODAL
-             ==================================================================== --}}
         .notification-modal {
             background: rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(10px);
@@ -422,7 +392,6 @@
             background: linear-gradient(135deg, #fff 0%, #FCE8D5 100%);
         }
 
-        {{-- Items individuales de notificación --}}
         .notification-item {
             border: 1px solid rgba(227, 139, 91, 0.2);
             border-radius: 15px;
@@ -455,7 +424,6 @@
             border-color: var(--secondary-orange);
         }
 
-        {{-- Header y contenido de notificaciones --}}
         .notification-header {
             display: flex;
             justify-content: space-between;
@@ -481,14 +449,13 @@
             line-height: 1.4;
         }
 
-        {{-- Acciones de notificaciones --}}
+        
         .notification-actions {
             margin-top: 15px;
             display: flex;
             gap: 10px;
         }
 
-        {{-- Botones de acción con efectos hover --}}
         .btn-approve {
             background: linear-gradient(135deg, #28a745, #20c997);
             border: none;
@@ -537,9 +504,6 @@
             box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
         }
 
-        {{-- ====================================================================
-             ESTADOS DE CARGA Y VALIDACIÓN
-             ==================================================================== --}}
         .btn.loading {
             position: relative;
             pointer-events: none;
@@ -563,7 +527,6 @@
             opacity: 0;
         }
 
-        {{-- Estados de validación de contraseña --}}
         .password-validation-success {
             border-color: #28a745;
             box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
@@ -574,9 +537,6 @@
             box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
         }
 
-        {{-- ====================================================================
-             INFORMACIÓN DE AUTORIZACIÓN DE USUARIO
-             ==================================================================== --}}
         #datosUsuarioAutoriza {
             transition: all 0.4s ease;
             transform-origin: top;
@@ -588,7 +548,6 @@
             border-radius: 10px;
         }
 
-        {{-- Animación para mensajes de éxito --}}
         .success-message {
             animation: successPulse 0.6s ease-in-out;
         }
@@ -599,7 +558,7 @@
             100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
         }
 
-        {{-- Estado sin notificaciones --}}
+        
         .no-notifications {
             text-align: center;
             padding: 40px 20px;
@@ -612,9 +571,6 @@
             opacity: 0.5;
         }
 
-        {{-- ====================================================================
-             RESPONSIVE DESIGN PARA DISPOSITIVOS MÓVILES
-             ==================================================================== --}}
         @media (max-width: 768px) {
             .navbar-right-controls {
                 gap: 10px;
@@ -654,9 +610,6 @@
             }
         }
 
-        {{-- ====================================================================
-             ESTILOS PARA CAMPOS DE FORMULARIO
-             ==================================================================== --}}
         .campo-correo-disabled {
             background-color: #f8f9fa;
             cursor: not-allowed;
@@ -674,7 +627,6 @@
             100% { background-color: white; }
         }
 
-        {{-- Indicador de filtro activo --}}
         .filter-indicator {
             background: linear-gradient(135deg, #28a745, #20c997);
             color: white;
@@ -1017,13 +969,28 @@
             <a href="{{ route('materials.export') }}" class="btn btn-outline-primary">
                 <i class="fas fa-file-export"></i> Exportar Excel (Existencia)</a>
             
-            <!-- Formulario de búsqueda -->
-            <form class="d-flex" action="{{ route('materials') }}" method="GET">
-                <input class="form-control me-2" type="search" name="query" placeholder="Buscar material"
-                    aria-label="Buscar" value="{{ request('query') }}">
-                <button class="btn btn-outline-success me-2" type="submit"><i class="bi bi-search"></i></button>
-            </form>
-            
+            <!-- BUSCADOR CON FILTROS -->
+        <div class="search-container">
+            <div class="row">
+                <div class="col-md-10 offset-md-1">
+                    <div class="input-group">
+                        <select id="searchField" class="form-select" style="max-width: 180px;">
+                            <option value="all">Todos los campos</option>
+                            <option value="clave">Clave</option>
+                            <option value="descripcion">Descripción</option>
+                            <option value="generico">Genérico</option>
+                            <option value="clasificacion">Clasificación</option>
+                            @if(Auth::user()->tipo_usuario == 1)
+                            <option value="lugar">Lugar</option>
+                            @endif
+                        </select>
+                        <input type="text" id="searchMaterials" class="form-control search-input"
+                            placeholder="Buscar materiales...">
+                        <button class="btn btn-outline-success me-2" type="submit"><i class="bi bi-search"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
             <!-- Botón para registrar nuevo material -->
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalMaterial"
                 id="btnNuevoMaterial">Registrar Material</button>
@@ -1139,11 +1106,6 @@
         </div>
     </div>
     @endif
-
-    {{-- ========================================================================
-         MODALES PARA GESTIÓN DE MATERIALES
-         ======================================================================== --}}
-    {{-- Modal universal para crear/editar/ver materiales --}}
     <div class="modal fade" id="modalMaterial" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -1206,10 +1168,6 @@
             </div>
         </div>
     </div>
-
-    {{-- ========================================================================
-         MODAL PRINCIPAL DE REPORTE DE FALLAS
-         ======================================================================== --}}
     <div class="modal fade" id="modalFalla" tabindex="-1">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">

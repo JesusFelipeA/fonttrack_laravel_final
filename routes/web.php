@@ -26,6 +26,7 @@ use App\Http\Controllers\FallaController;
 use App\Http\Controllers\NotificacionController;
 use App\Http\Controllers\VehiculoController;
 use App\Models\Lugar;
+use Illuminate\Support\Facades\Auth; // { changed code }
 
 /**
  * RUTA DE INICIO
@@ -60,18 +61,20 @@ Route::post('/login', [UsuarioController::class, 'login'])->name('login');
 Route::post('/logout', [UsuarioController::class, 'logout'])->name('logout');
 
 /**
- * DASHBOARD ADMINISTRATIVO
- * 
- * Acceso restringido solo para usuarios con rol de administrador
+ * DASHBOARD (entrada única según tipo de usuario)
+ * - Admin: muestra la vista/listado de administración (UsuarioController@index)
+ * - Usuario normal: redirige a la vista de materiales
  */
-Route::middleware(['auth', 'role:admin'])->group(function () {
-   /**
-    * Panel principal de administración
-    */
-   Route::get('/dashboard', function () {
-      return view('dashboard');
-   })->name('dashboard');
-});
+Route::get('/dashboard', function () {
+   $user = Auth::user();
+   if ($user && (($user->tipo_usuario ?? null) == 1)) {
+       // Llamamos al método del controlador (inyecta DashboardManager automáticamente)
+       return app()->call([UsuarioController::class, 'index']);
+   }
+
+   // Usuario normal -> vista de materiales
+   return redirect()->route('materiales.index');
+})->middleware('auth')->name('dashboard');
 
 /**
  * GESTIÓN DE USUARIOS - OPERACIONES CRUD
@@ -83,6 +86,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
  * Lista todos los usuarios del sistema
  */
 Route::get('/users', [UsuarioController::class, 'index'])->name('users');
+Route::get('/users/search', [UsuarioController::class, 'searchUsuarios'])->name('user.search');
 
 /**
  * Muestra los detalles de un usuario específico
@@ -489,3 +493,4 @@ Route::middleware(['auth'])->group(function () {
     */
    Route::resource('vehiculos', VehiculoController::class);
 });
+

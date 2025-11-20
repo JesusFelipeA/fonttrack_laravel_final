@@ -28,9 +28,16 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ReporteFalla;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Services\NotificationManager; // { changed code }
 
 class NotificacionController extends Controller
 {
+    // { changed code }
+    public function __construct(protected NotificationManager $notifier)
+    {
+        // middleware u otras inicializaciones si se requieren
+    }
+
     /**
      * API: Crear nueva notificación desde usuarios normales
      */
@@ -41,27 +48,22 @@ class NotificacionController extends Controller
             'usuario_reporta_id' => 'required|exists:tb_users,id_usuario',
             'nombre_usuario_reporta' => 'required|string',
             'correo_usuario_reporta' => 'required|email',
-            'materials' => 'required|string', // JSON string
-            // Otros campos son opcionales
+            'materials' => 'required|string',
         ]);
 
         try {
             DB::beginTransaction();
 
-            // Decodificar materiales
             $materials = json_decode($request->materials, true);
-            
             if (!$materials || !is_array($materials)) {
                 return response()->json(['error' => 'Materiales inválidos'], 422);
             }
 
-            // Verificar existencia de materiales
             foreach ($materials as $material) {
                 $materialModel = Material::find($material['id']);
                 if (!$materialModel) {
                     return response()->json(['error' => "Material ID {$material['id']} no encontrado"], 422);
                 }
-                
                 if ($materialModel->existencia < $material['cantidad']) {
                     return response()->json([
                         'error' => "Stock insuficiente para {$materialModel->descripcion}. Disponible: {$materialModel->existencia}, Solicitado: {$material['cantidad']}"
@@ -69,13 +71,12 @@ class NotificacionController extends Controller
                 }
             }
 
-            // Crear la notificación
             $notificacion = Notificacion::create([
                 'id_lugar' => $request->id_lugar,
                 'eco' => $request->eco,
                 'placas' => $request->placas,
                 'marca' => $request->marca,
-                'anio' => $request->ano, // El formulario envía 'ano'
+                'anio' => $request->ano,
                 'km' => $request->km,
                 'fecha' => $request->fecha,
                 'nombre_conductor' => $request->nombre_conductor,
@@ -96,6 +97,17 @@ class NotificacionController extends Controller
                 'usuario_reporta' => $request->nombre_usuario_reporta,
                 'lugar' => $request->id_lugar
             ]);
+
+            // Enviar confirmación al usuario que reportó (intento)
+            $reporter = Usuarios::find($request->usuario_reporta_id);
+            if ($reporter) {
+                $payload = [
+                    'subject' => 'Confirmación: notificación recibida',
+                    'message' => "Su reporte (ID {$notificacion->id_notificacion}) fue recibido y está pendiente de revisión.",
+                    'type' => 'notificacion.recebida'
+                ];
+                $this->notifier->send($reporter, 'email', $payload);
+            }
 
             return response()->json([
                 'success' => true,
@@ -236,28 +248,17 @@ class NotificacionController extends Controller
         try {
             DB::beginTransaction();
 
-            // Verificar contraseña del admin
             $admin = auth()->user();
             if (!Hash::check($request->password, $admin->password)) {
-                return response()->json([
-                    'error' => 'Contraseña incorrecta'
-                ], 422);
+                return response()->json(['error' => 'Contraseña incorrecta'], 422);
             }
-
-            // Verificar que sea admin
             if ($admin->tipo_usuario !== 1) {
-                return response()->json([
-                    'error' => 'Solo administradores pueden aprobar notificaciones'
-                ], 403);
+                return response()->json(['error' => 'Solo administradores pueden aprobar notificaciones'], 403);
             }
 
             $notificacion = Notificacion::findOrFail($id);
-
-            // Verificar que esté pendiente
             if (!$notificacion->isPendiente()) {
-                return response()->json([
-                    'error' => 'Esta notificación ya fue procesada'
-                ], 422);
+                return response()->json(['error' => 'Esta notificación ya fue procesada'], 422);
             }
 
             // Verificar stock de materiales nuevamente
@@ -420,6 +421,18 @@ class NotificacionController extends Controller
             // Eliminar la notificación después de procesar
             $notificacion->delete();
 
+            // Obtener reporter y enviar notificación de aprobación
+            $reporter = Usuarios::find($notificacion->usuario_reporta_id);
+            if ($reporter) {
+                $payload = [
+                    'subject' => 'Su reporte fue aprobado',
+                    'message' => "Su reporte (ID {$notificacion->id_notificacion}) fue aprobado y convertido en reporte de falla (ID {$falla}).",
+                    'type' => 'notificacion.aprobada',
+                    'falla_id' => $falla
+                ];
+                $this->notifier->send($reporter, 'email', $payload);
+            }
+
             DB::commit();
 
             return response()->json([
@@ -433,8 +446,7 @@ class NotificacionController extends Controller
             Log::error('Error al aprobar notificación', [
                 'notificacion_id' => $id,
                 'admin_id' => auth()->id(),
-                'error' => $e->getMessage(),
-                'stack_trace' => $e->getTraceAsString()
+                'error' => $e->getMessage()
             ]);
 
             return response()->json([
@@ -548,25 +560,27 @@ class NotificacionController extends Controller
 
         try {
             $admin = auth()->user();
-
-            // Verificar que sea admin
             if ($admin->tipo_usuario !== 1) {
-                return response()->json([
-                    'error' => 'Solo administradores pueden rechazar notificaciones'
-                ], 403);
+                return response()->json(['error' => 'Solo administradores pueden rechazar notificaciones'], 403);
             }
 
             $notificacion = Notificacion::findOrFail($id);
-
-            // Verificar que esté pendiente
             if (!$notificacion->isPendiente()) {
-                return response()->json([
-                    'error' => 'Esta notificación ya fue procesada'
-                ], 422);
+                return response()->json(['error' => 'Esta notificación ya fue procesada'], 422);
             }
 
-            // Rechazar notificación (se mantiene en la tabla)
             $notificacion->rechazar($admin, $request->comentarios);
+
+            // Notificar al reportante sobre rechazo
+            $reporter = Usuarios::find($notificacion->usuario_reporta_id);
+            if ($reporter) {
+                $payload = [
+                    'subject' => 'Su reporte fue rechazado',
+                    'message' => "Su reporte (ID {$notificacion->id_notificacion}) fue rechazado. Comentarios: {$request->comentarios}",
+                    'type' => 'notificacion.rechazada'
+                ];
+                $this->notifier->send($reporter, 'email', $payload);
+            }
 
             return response()->json([
                 'success' => true,
