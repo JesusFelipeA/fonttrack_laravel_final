@@ -30,6 +30,21 @@ class AppServiceProvider extends ServiceProvider
                 'fecha' => new FechaSearchStrategy(),
             ]);
         });
+
+        // Registrar DAOs
+        $this->app->bind(
+            \App\DAO\Interfaces\MaterialDAOInterface::class,
+            \App\DAO\Implementations\MaterialDAO::class
+        );
+
+        // Registrar Repositories
+        $this->app->singleton(\App\Repositories\MaterialRepository::class);
+
+        // Registrar Services
+        $this->app->singleton(\App\Services\MaterialService::class);
+
+        // Registrar ViewModels
+        $this->app->bind(\App\ViewModels\MaterialViewModel::class);
     }
 
     /**

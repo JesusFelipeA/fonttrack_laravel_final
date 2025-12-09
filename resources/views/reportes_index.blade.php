@@ -1085,7 +1085,7 @@
             <div class="row align-items-center">
                 <div class="col-md-10">
                     <input type="text" id="searchFallas" class="search-input w-100"
-                        placeholder="Buscar por lugar, conductor, descripción, ECO, placas, marca...">
+                        placeholder="Fecha, Conductor, ECO, Placas, Descripción, Material, Autorizado por, Revisó, Reporta...">
                 </div>
                 <div class="col-md-2 text-center">
                     <button class="btn btn-outline-light w-100">

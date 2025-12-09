@@ -21,15 +21,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Services\DashboardManager;
-use App\Services\Buscador; // { changed code }
+use App\Services\Buscador;
 
 class UsuarioController extends Controller
 {
-    // { changed code }
+
     public function __construct(protected DashboardManager $dashboardManager, protected Buscador $buscador)
     {
-        // Si necesita middleware lo puede agregar aquí, p.e.:
-        // $this->middleware('auth')->except(['login']);
+        $this->middleware('auth')->except(['login']);
         $this->buscador = $buscador;
     }
     
@@ -41,16 +40,11 @@ class UsuarioController extends Controller
     {
         $usuarios = Usuarios::with('lugar')->paginate(10);
         $lugares = Lugar::all();
+        $dashboard = Auth::check() ? $this->dashboardManager->getDashboardFor(Auth::user()) : null;
 
-        // Obtener datos de dashboard (si hay usuario autenticado)
-        $dashboard = Auth::check() ? $this->dashboardManager->getDashboardFor(Auth::user()) : null; // { changed code }
-
-        return view('index', compact('usuarios', 'lugares', 'dashboard')); // { changed code }
+        return view('index', compact('usuarios', 'lugares', 'dashboard'));
     }
 
-    /**
-     * Vista de materiales para administradores con búsqueda
-     */
     public function indexMateriales(Request $request)
     {
         $lugares = Lugar::all();
