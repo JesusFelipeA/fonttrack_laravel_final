@@ -1,6 +1,6 @@
-📘 README.md - Sistema FontTrack
+ README.md - Sistema FontTrack
 
-FontTrack - Sistema de Gestión de Inventario y Mantenimiento Vehicular
+## FontTrack - Sistema de Gestión de Inventario y Mantenimiento Vehicular
 
 <div align="center">
   <img src="public/img/FontTrack.png" alt="FontTrack Logo" width="200"/>
@@ -34,7 +34,7 @@ FontTrack - Sistema de Gestión de Inventario y Mantenimiento Vehicular
 
 ---
 
-## 📖 Descripción
+##  Descripción
 
 **FontTrack** es un sistema integral de gestión de inventario de materiales y mantenimiento vehicular desarrollado con Laravel. Permite el control eficiente de:
 
@@ -189,7 +189,7 @@ Apache/Nginx con mod_rewrite habilitado
 ### Método 1: Instalación Manual
 ```bash
 # 1. Clonar el repositorio
-git clone https://github.com/tu-usuario/fonttrack.git
+git clone https://github.com/JesusFelipeA/fonttrack_laravel_final.git
 cd fonttrack
 
 # 2. Instalar dependencias de PHP
@@ -224,7 +224,7 @@ php artisan serve
 ### Método 2: Usando Docker (Recomendado)
 ```bash
 # 1. Clonar repositorio
-git clone https://github.com/tu-usuario/fonttrack.git
+git https://github.com/JesusFelipeA/fonttrack_laravel_final.git
 cd fonttrack
 
 # 2. Levantar contenedores
@@ -248,7 +248,7 @@ Acceder a: `http://localhost:8000`
 
 ---
 
-## ⚙️ Configuración
+##  Configuración
 
 ### 1. Configurar Base de Datos
 
