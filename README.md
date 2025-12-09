@@ -1,5 +1,6 @@
 📘 README.md - Sistema FontTrack
-markdown# 🚗 FontTrack - Sistema de Gestión de Inventario y Mantenimiento Vehicular
+
+FontTrack - Sistema de Gestión de Inventario y Mantenimiento Vehicular
 
 <div align="center">
   <img src="public/img/FontTrack.png" alt="FontTrack Logo" width="200"/>
@@ -13,7 +14,7 @@ markdown# 🚗 FontTrack - Sistema de Gestión de Inventario y Mantenimiento Veh
 
 ---
 
-## 📋 Tabla de Contenidos
+##  Tabla de Contenidos
 
 - [Descripción](#-descripción)
 - [Características](#-características)
@@ -37,23 +38,23 @@ markdown# 🚗 FontTrack - Sistema de Gestión de Inventario y Mantenimiento Veh
 
 **FontTrack** es un sistema integral de gestión de inventario de materiales y mantenimiento vehicular desarrollado con Laravel. Permite el control eficiente de:
 
-- 📦 **Inventario de materiales** por ubicaciones
-- 🚗 **Flota vehicular** y su mantenimiento
-- 📊 **Reportes de fallas** y uso de materiales
-- 👥 **Usuarios y permisos** por ubicación
-- 📍 **Gestión de lugares** (almacenes, talleres, sucursales)
-- 🔔 **Sistema de notificaciones** en tiempo real
-- 📄 **Generación de reportes PDF** automáticos
+-  **Inventario de materiales** por ubicaciones
+-  **Flota vehicular** y su mantenimiento
+-  **Reportes de fallas** y uso de materiales
+-  **Usuarios y permisos** por ubicación
+-  **Gestión de lugares** (almacenes, talleres, sucursales)
+-  **Sistema de notificaciones** en tiempo real
+-  **Generación de reportes PDF** automáticos
 
 El sistema está diseñado para empresas con múltiples ubicaciones que requieren control detallado de inventarios y mantenimiento de su flota vehicular.
 
 ---
 
-## ✨ Características
+##  Características
 
-### 🎯 Funcionalidades Principales
+###  Funcionalidades Principales
 
-#### 📦 Gestión de Materiales
+####  Gestión de Materiales
 - ✅ CRUD completo de materiales
 - ✅ Control de existencias por ubicación
 - ✅ Alertas de stock bajo
@@ -62,14 +63,14 @@ El sistema está diseñado para empresas con múltiples ubicaciones que requiere
 - ✅ Búsqueda y filtrado avanzado
 - ✅ Historial de movimientos
 
-#### 🚗 Gestión de Vehículos
+####  Gestión de Vehículos
 - ✅ Registro de flota vehicular
 - ✅ Control de kilometraje
 - ✅ Historial de mantenimiento
 - ✅ Asociación con ubicaciones
 - ✅ Información técnica detallada
 
-#### 📋 Reportes de Fallas
+####  Reportes de Fallas
 - ✅ Registro de fallas y mantenimientos
 - ✅ Asignación de materiales utilizados
 - ✅ Generación automática de PDF
@@ -77,20 +78,20 @@ El sistema está diseñado para empresas con múltiples ubicaciones que requiere
 - ✅ Sistema de aprobación con validación
 - ✅ Firmas digitales (usuario reporta/revisa)
 
-#### 🔔 Sistema de Notificaciones
+####  Sistema de Notificaciones
 - ✅ Notificaciones en tiempo real
 - ✅ Aprobación/rechazo de reportes
 - ✅ Validación con contraseña
 - ✅ Actualización automática del inventario
 - ✅ Contador visual de pendientes
 
-#### 👥 Gestión de Usuarios
+####  Gestión de Usuarios
 - ✅ Roles y permisos (Admin/Usuario)
 - ✅ Asignación por ubicación
 - ✅ Control de acceso granular
 - ✅ Registro de auditoría
 
-#### 📍 Gestión de Ubicaciones
+####  Gestión de Ubicaciones
 - ✅ Múltiples almacenes/sucursales
 - ✅ Estadísticas por ubicación
 - ✅ Asignación de usuarios y materiales
@@ -98,7 +99,7 @@ El sistema está diseñado para empresas con múltiples ubicaciones que requiere
 
 ---
 
-## 🏗️ Arquitectura
+##  Arquitectura
 
 FontTrack implementa una arquitectura híbrida **MVC + MVVM + DAO** para máxima escalabilidad y mantenibilidad:
 ```
@@ -123,7 +124,7 @@ MODEL (Eloquent ORM - Mapeo de tablas)
 DATABASE (MySQL)
 ```
 
-### 🎨 Patrones de Diseño Implementados
+###  Patrones de Diseño Implementados
 
 - **DAO (Data Access Object)**: Abstracción de acceso a datos
 - **Repository Pattern**: Consultas complejas y lógica de datos
@@ -134,7 +135,7 @@ DATABASE (MySQL)
 
 ---
 
-## 🛠️ Tecnologías
+##  Tecnologías
 
 ### Backend
 - **[Laravel 10.x](https://laravel.com)** - Framework PHP
@@ -156,7 +157,7 @@ DATABASE (MySQL)
 
 ---
 
-## 💻 Requisitos
+##  Requisitos
 
 ### Requisitos del Sistema
 ```bash
@@ -291,11 +292,11 @@ Email: admin@fonttrack.com
 Contraseña: password
 ```
 
-**⚠️ CAMBIAR CONTRASEÑA INMEDIATAMENTE EN PRODUCCIÓN**
+** CAMBIAR CONTRASEÑA INMEDIATAMENTE EN PRODUCCIÓN**
 
 ---
 
-## 🎮 Uso
+##  Uso
 
 ### Inicio Rápido
 
@@ -398,7 +399,7 @@ fonttrack/
 
 ---
 
-## 📦 Módulos
+##  Módulos
 
 ### 1. Materiales (`/materials`)
 
@@ -466,7 +467,7 @@ app/Http/Controllers/UsuarioController.php
 
 ---
 
-## 🔌 API Endpoints
+##  API Endpoints
 
 ### Materiales
 ```http
@@ -510,7 +511,7 @@ POST   /notificaciones/{id}/rechazar      # Rechazar notificación
 
 ---
 
-## 🧪 Testing
+##  Testing
 
 ### Ejecutar Tests
 ```bash
@@ -535,7 +536,7 @@ php artisan make:test MaterialServiceTest --unit
 
 ---
 
-## 🤝 Contribución
+##  Contribución
 
 ### Cómo Contribuir
 
@@ -572,10 +573,10 @@ Usa el [Issue Tracker](https://github.com/tu-usuario/fonttrack/issues) con:
 
 ---
 
-## 👨‍💻 Créditos
+##  Créditos
 
 ### Desarrollador Principal
-- **Jesús Felipe Avilés** - *Desarrollo Full Stack*
+- **Jesus Felipe Aviles** - *Desarrollo Full Stack*
 
 ### Tecnologías y Agradecimientos
 - [Laravel Framework](https://laravel.com)
@@ -584,7 +585,7 @@ Usa el [Issue Tracker](https://github.com/tu-usuario/fonttrack/issues) con:
 
 ---
 
-## 📄 Licencia
+##  Licencia
 
 Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para más detalles.
 ```
@@ -605,15 +606,15 @@ copies or substantial portions of the Software.
 
 ---
 
-## 📞 Contacto
+##  Contacto
 
-- **Autor**: Jesús Felipe Avilés
-- **Email**: contacto@fonttrack.com
-- **GitHub**: [@tu-usuario](https://github.com/tu-usuario)
+- **Autor**: Jesus Felipe Aviles
+- **Email**: al222310418@gmail.com
+- **GitHub**: [@tu-usuario](https://github.com/JesusFelipeA)
 
 ---
 
-## 📊 Estadísticas del Proyecto
+##  Estadísticas del Proyecto
 
 ![GitHub repo size](https://img.shields.io/github/repo-size/tu-usuario/fonttrack?style=flat-square)
 ![GitHub contributors](https://img.shields.io/github/contributors/tu-usuario/fonttrack?style=flat-square)
@@ -622,9 +623,9 @@ copies or substantial portions of the Software.
 
 ---
 
-## 🗺️ Roadmap
+##  Roadmap
 
-### ✅ Versión 1.0 (Actual)
+###  Versión 1.0 (Actual)
 - [x] CRUD de materiales
 - [x] CRUD de usuarios
 - [x] CRUD de lugares
@@ -634,14 +635,14 @@ copies or substantial portions of the Software.
 - [x] Generación de PDFs
 - [x] Importación/exportación Excel
 
-### 🚧 Versión 1.1 (En Desarrollo)
+###  Versión 1.1 (En Desarrollo)
 - [ ] Dashboard con gráficas
 - [ ] Reportes analíticos avanzados
 - [ ] API RESTful completa
 - [ ] App móvil (Flutter)
 - [ ] Sistema de backup automático
 
-### 🔮 Versión 2.0 (Futuro)
+###  Versión 2.0 (Futuro)
 - [ ] Predicción de mantenimiento (IA)
 - [ ] Integración con IoT
 - [ ] Sistema de facturación
@@ -650,17 +651,17 @@ copies or substantial portions of the Software.
 
 ---
 
-## 🎓 Documentación Adicional
+##  Documentación Adicional
 
-- [📖 Guía de Instalación Detallada](docs/INSTALLATION.md)
-- [🏗️ Arquitectura del Sistema](docs/ARCHITECTURE.md)
-- [🔌 Documentación API](docs/API.md)
-- [🎨 Guía de Contribución](CONTRIBUTING.md)
-- [📝 Changelog](CHANGELOG.md)
+- [ Guía de Instalación Detallada](docs/INSTALLATION.md)
+- [ Arquitectura del Sistema](docs/ARCHITECTURE.md)
+- [ Documentación API](docs/API.md)
+- [ Guía de Contribución](CONTRIBUTING.md)
+- [ Changelog](CHANGELOG.md)
 
 ---
 
-## 💡 FAQ
+##  FAQ
 
 <details>
 <summary><b>¿Cómo reseteo la contraseña de un usuario?</b></summary>
@@ -698,15 +699,15 @@ Navega a "Materiales" → Click en "Exportar Excel"
 
 <div align="center">
 
-**⭐ Si este proyecto te fue útil, considera darle una estrella ⭐**
+** Si este proyecto te fue útil, considera darle una estrella ⭐**
 
-Hecho con ❤️ por el equipo de FontTrack
+Hecho con el corazón por el equipo de FontTrack
 
-[🏠 Inicio](#-fonttrack---sistema-de-gestión-de-inventario-y-mantenimiento-vehicular) • [📖 Docs](docs/) • [🐛 Reportar Bug](issues/) • [✨ Solicitar Feature](issues/)
+[ Inicio](#-fonttrack---sistema-de-gestión-de-inventario-y-mantenimiento-vehicular) • [ Docs](docs/) • [ Reportar Bug](issues/) • [ Solicitar Feature](issues/)
 
 </div>
 
-🎨 Extras: Badges y Shields Adicionales
+ Extras: Badges y Shields Adicionales
 Si quieres personalizar más tu README, aquí hay badges adicionales:
 markdown<!-- Status -->
 ![Status](https://img.shields.io/badge/Status-Active-success?style=for-the-badge)
@@ -718,3 +719,4 @@ markdown<!-- Status -->
 
 <!-- Social -->
 ![Twitter Follow](https://img.shields.io/twitter/follow/fonttrack?style=social)
+
