@@ -1,18 +1,5 @@
 <?php
 
-/**
- * Controlador Falla - Sistema de gestión de reportes de fallas
- * 
- * Maneja el sistema completo de fallas vehiculares incluyendo creación
- * de reportes, generación de PDFs, envío de correos y validaciones.
- * Incluye endpoints de API REST para integración con frontend JavaScript
- * y operaciones AJAX. Controla inventario mediante desconteo de materiales.
- * 
- * @author Jesús Felipe Avilez
- * @author Daniela Pérez Peralta
- * @version 2.0.1 - Corregido
- */
-
 namespace App\Http\Controllers;
 
 use App\ViewModels\FallaViewModel;
@@ -30,7 +17,7 @@ class FallaController extends Controller
     protected $materialViewModel;
 
     /**
-     * Constructor con inyección de dependencias (mejor práctica)
+     * Inyección de dependencias correcta (mejor práctica que new)
      */
     public function __construct(
         //FallaViewModel $fallaViewModel,
